@@ -385,13 +385,18 @@ void RTC_IRQHandler(void)
     humdr = 0;
     tempdr = 0;
     hash = 0;
-    dht11_get_inform();
-    decoding();
+    if (dht11_get_inform() != 0)
+        value = 666;               // error code on indicator;
+    else    
+        {
+        decoding();
+        if (out_flag == 0)
+            value = temp;
+        if (out_flag == 1)
+            value = hum;
+        
+        }
     LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_8);
-    if (out_flag == 0)
-        value = temp;
-    if (out_flag == 1)
-        value = hum;
     LL_RTC_ClearFlag_ALRA(RTC);
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_17);
 }    
