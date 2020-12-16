@@ -6,7 +6,6 @@
 #include "stm32f0xx_ll_pwr.h"
 #include "stm32f0xx_ll_exti.h"
 #include "stm32f0xx_ll_usart.h"
-#include "xprintf.h"
 #include "stm32f0xx_ll_utils.h"
 #include "stm32f0xx_ll_cortex.h"
 #include "stm32f0xx_ll_tim.h"
@@ -380,13 +379,14 @@ static void rtc_config(void)
 
 void RTC_IRQHandler(void)
 {
-    hum = 0;
+   hum = 0;
     temp = 0;
     humdr = 0;
     tempdr = 0;
     hash = 0;
-    if (dht11_get_inform() != 0)
-        value = 666;               // error code on indicator;
+    uint8_t err = dht11_get_inform();
+    if (err != 0)
+        value = 1000 * err + 666;               // error code on indicator;
     else    
         {
         decoding();
@@ -394,8 +394,10 @@ void RTC_IRQHandler(void)
             value = temp;
         if (out_flag == 1)
             value = hum;
-        
         }
+    LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_8);
+    LL_RTC_ClearFlag_ALRA(RTC);
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_17);
     LL_GPIO_TogglePin(GPIOC, LL_GPIO_PIN_8);
     LL_RTC_ClearFlag_ALRA(RTC);
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_17);
