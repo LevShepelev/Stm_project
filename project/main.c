@@ -74,18 +74,16 @@ int dht11_get_inform()
 
     for (i = 0; i < 40; i++)                                        //data transmission
     {   
-        t1 = LL_TIM_GetCounter(TIM2);
-        if (t1 > 0xAFFFFFFF)
-            {
+        if (LL_TIM_GetCounter(TIM2) > 0xAFFFFFFF)
             LL_TIM_GenerateEvent_UPDATE(TIM2);
-            return 3;
-            }
         while (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_3) == 0)
             ;
         t = LL_TIM_GetCounter(TIM2);
         while (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_3) == 1)
             ;
         time = LL_TIM_GetCounter(TIM2) - t;
+        if ((time <= 13) || (time >= 80)) 
+            return 3;
         if ((time > 13) && (time < 35)) 
             bit[i] = 0;
         if ((time > 60) && (time < 80)) 
