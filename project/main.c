@@ -29,6 +29,14 @@ void button();
 void decoding();
 static void set_indicator(uint8_t number);
 static void systick_config(void);
+void SysTick_Handler(void);
+static void exti_config(void);
+void EXTI0_1_IRQHandler(void);
+static void rcc_config();
+static void gpio_config(void);
+static void timers_config(void);
+static void rtc_config(void);
+void RTC_IRQHandler(void);
 
 int value = 0;
 uint8_t out_flag = 0;
