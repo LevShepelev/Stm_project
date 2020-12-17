@@ -23,8 +23,6 @@
   *    Flash Latency(WS)              = 1
   */
 
-static char usart_getc(void);
-static void usart_putc(char symbol);
 void mydelay(uint8_t i);
 int dht11_get_inform();
 void button();
@@ -77,6 +75,11 @@ int dht11_get_inform()
     for (i = 0; i < 40; i++)                                        //data transmission
     {   
         t1 = LL_TIM_GetCounter(TIM2);
+        if (t1 > 0xAFFFFFFF)
+            {
+            LL_TIM_GenerateEvent_UPDATE(TIM2);
+            return 3;
+            }
         while (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_3) == 0)
             ;
         t = LL_TIM_GetCounter(TIM2);
