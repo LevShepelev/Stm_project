@@ -199,38 +199,36 @@ static void set_indicator(uint8_t number)
 
 void dynamic_indication()
 {
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_4);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_7);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_6);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_5);
     set_indicator(value % 10);
+    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_4);
     delay_10ms();
 
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_5);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_7);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_6);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_4);
-    if (((value / 10) % 10 == 0) && ((value / 100) % 10 == 0) && ((value / 1000) % 10 == 0))
-        LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_5);
     set_indicator((value / 10) % 10);
+    if (((value / 10) % 10 != 0) || ((value / 100) % 10 != 0) || ((value / 1000) % 10 != 0))
+        LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_5);
     delay_10ms();
 
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_6);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_7);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_4);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_5);
-    if (((value / 100) % 10 == 0) && ((value / 1000) % 10 == 0))
-        LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_6);
     set_indicator((value / 100) % 10);
+    if (((value / 100) % 10 != 0) || ((value / 1000) % 10 != 0))
+        LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_6);
     delay_10ms();
 
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_7);
+    
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_4);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_6);
     LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_5);
-    if ((value / 1000) % 10 == 0)
-        LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_7);
     set_indicator((value / 1000) % 10);
+    if ((value / 1000) % 10 != 0)
+        LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_7);
     delay_10ms();
 }
 
